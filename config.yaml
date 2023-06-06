@@ -6,28 +6,25 @@ googleAnalytics: ''
 disqusShortname: ''
 params:
   banner:
-    buttonText: Get Started
-    url: /your-page  # <-- Change '/your-page' to the relative URL of your target page
+    buttonText: About Me
+    url: https://edward-davies-portfolio.netlify.app/about-me/  # <-- Change '/your-page' to the relative URL of your target page
     title: Hi, my name is Edward Davies.
   # The rest of your parameters go here...
   footer:
     # The rest of your footer parameters go here...
     social:
-      - icon: fa-twitter
-        label: Twitter
-        url: https://www.twitter.com
       - icon: fa-facebook
         label: Facebook
-        url: https://www.facebook.com
+        url: https://www.facebook.com/edward.davies.712714
       - icon: fa-instagram
         label: Instagram
-        url: https://www.instagram.com
+        url: https://www.instagram.com/edxdavies/
       - icon: fa-github
         label: GitHub
-        url: https://www.github.com
+        url: https://github.com/edwardhdavies
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com/in/your-username  # <-- replace with your LinkedIn URL
+        url: https://www.linkedin.com/in/edwardhdavies/  # <-- replace with your LinkedIn URL
   # The rest of your parameters go here...
   navigation:
     links:
@@ -35,5 +32,5 @@ params:
         url: '#'
       - name: Blogs
         url: blogs
-      - name: Get Started
-        url: /your-page  # This should link to the page you want to navigate to when "Get Started" is clicked
+      - name: About Me
+        url: about-me  # This should link to the page you want to navigate to when "Get Started" is clicked
