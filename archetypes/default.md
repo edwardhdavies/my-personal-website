@@ -1,12 +1,7 @@
 ---
-title: "{{ replace .TranslationBaseName "-" " " | title }}"
-description: ""
-slug: ""
-image: ""
-keywords: ""
-categories: 
-    - "{{ replace .TranslationBaseName "-" " " | title }}"
-    - ""
+title: "{{ replace .File.ContentBaseName "-" " " | title }}"
 date: {{ .Date }}
-draft: false
+tags: []
+featured_image: ""
+description: ""
 ---
