@@ -7,7 +7,7 @@ disqusShortname: ''
 params:
   banner:
     buttonText: About Me
-    url: /about-me/  # <-- Change '/your-page' to the relative URL of your target page
+    url: https://edward-davies-portfolio.netlify.app/about-me/  # <-- Change '/your-page' to the relative URL of your target page
     # The rest of your parameters go here...
     title: Hi! My name is Edward Davies...
   footer:
