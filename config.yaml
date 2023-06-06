@@ -7,19 +7,33 @@ disqusShortname: ''
 params:
   banner:
     buttonText: Get Started
-    # subtitle: |-
-    # A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-    # AND RELEASED UNDER THE CREATIVE COMMONS.
+    url: /your-page  # <-- Change '/your-page' to the relative URL of your target page
     title: Hi, my name is Edward Davies.
-  blog: {}
-  contact:
-  buttonClear: Clear
-  buttonSend: Send message
-  email:
-    - email: edwardhdavies@outlook.com
-      title: Email
-  enable: yes
-  phone:
-    - phone: (000) 000-0000 x1234
-      title: Phone
-...
+  # The rest of your parameters go here...
+  footer:
+    # The rest of your footer parameters go here...
+    social:
+      - icon: fa-twitter
+        label: Twitter
+        url: https://www.twitter.com
+      - icon: fa-facebook
+        label: Facebook
+        url: https://www.facebook.com
+      - icon: fa-instagram
+        label: Instagram
+        url: https://www.instagram.com
+      - icon: fa-github
+        label: GitHub
+        url: https://www.github.com
+      - icon: fa-linkedin
+        label: LinkedIn
+        url: https://www.linkedin.com/in/your-username  # <-- replace with your LinkedIn URL
+  # The rest of your parameters go here...
+  navigation:
+    links:
+      - name: Home
+        url: '#'
+      - name: Blogs
+        url: blogs
+      - name: Get Started
+        url: /your-page  # This should link to the page you want to navigate to when "Get Started" is clicked
