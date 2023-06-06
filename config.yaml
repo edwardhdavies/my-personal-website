@@ -12,12 +12,8 @@ params:
     # AND RELEASED UNDER THE CREATIVE COMMONS.
     title: Hi, my name is Edward Davies.
   blog: {}
-  contact: edwardhdavies@outlook.com
-  # address: 
-  #    - city: City, ST 00000
-  #      country: Country
-  #      street: Street
-  #      title: Address
+  contact:
+  email: edwardhdavies@outlook.com
   buttonClear: Clear
   buttonSend: Send message
   email:
