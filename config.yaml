@@ -1,41 +1,37 @@
-title = "Notre-Dame de Paris"
-baseURL = "https://gohugo-theme-ananke.pages.dev"
-languageCode = "en-us"
-theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
-resourceDir = "../resources"
-
-DefaultContentLanguage = "en"
-SectionPagesMenu = "main"
-Paginate = 3 # this is set low for demonstrating with dummy content. Set to a higher number
-googleAnalytics = ""
-enableRobotsTXT = true
-
-[languages]
-  [languages.en]
-    title = "Ananke"
-    weight = 1
-    contentDir = "content/en"
-    # languageDirection = 'rtl' for Right-To-Left languages
-  [languages.fr]
-    title = "Ananke Fr"
-    weight = 2
-    contentDir = "content/fr"
-
-[sitemap]
-  changefreq = "monthly"
-  priority = 0.5
-  filename = "sitemap.xml"
-
-[params]
-  text_color = ""
-  author = ""
-  favicon = ""
-  site_logo = ""
-  description = "The last theme you'll ever need. Maybe."
-  # choose a background color from any on this page: https://tachyons.io/docs/themes/skins/ and preface it with "bg-"
-  background_color_class = "bg-black"
-  recent_posts_number = 3
-
-[[params.ananke_socials]]
-name = "twitter"
-url = "https://twitter.com/GoHugoIO"
+baseURL: https://edward-davies-portfolio.netlify.app/
+languageCode: en-us
+title: Portfolio Website for Edward Davies
+theme: forty
+googleAnalytics: ''
+disqusShortname: ''
+params:
+  banner:
+    buttonText: About Me
+    url: /about-me  # <-- Change '/your-page' to the relative URL of your target page
+    # The rest of your parameters go here...
+    title: Hi! My name is Edward Davies...
+  footer:
+    # The rest of your footer parameters go here...
+    enable: yes
+    social:
+      - icon: fa-facebook
+        label: Facebook
+        url: https://www.facebook.com/edward.davies.712714
+      - icon: fa-instagram
+        label: Instagram
+        url: https://www.instagram.com/edxdavies/
+      - icon: fa-github
+        label: GitHub
+        url: https://github.com/edwardhdavies
+      - icon: fa-linkedin
+        label: LinkedIn
+        url: https://www.linkedin.com/in/edwardhdavies/  # <-- replace with your LinkedIn URL
+  # The rest of your parameters go here...
+  navigation:
+    links:
+      - name: Home
+        url: '#'
+      - name: Blogs
+        url: blogs
+      - name: About Me
+        url: about-me  # This should link to the page you want to navigate to when "Get Started" is clicked
