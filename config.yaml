@@ -6,10 +6,6 @@ googleAnalytics: ''
 disqusShortname: ''
 params:
   banner:
-    buttonText: Blog
-    url: /blog  # <-- Change '/your-page' to the relative URL of your target page
-    title: Hi, my name is Edward Davies.
-    
     buttonText: About Me
     url: https://edward-davies-portfolio.netlify.app/about-me/  # <-- Change '/your-page' to the relative URL of your target page
     # The rest of your parameters go here...
