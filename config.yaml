@@ -12,6 +12,7 @@ params:
     title: Hi! My name is Edward Davies...
   footer:
     # The rest of your footer parameters go here...
+    enable: yes
     social:
       - icon: fa-facebook
         label: Facebook
