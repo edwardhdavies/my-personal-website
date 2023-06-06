@@ -13,11 +13,10 @@ params:
     title: Hi, my name is Edward Davies.
   blog: {}
   contact:
-  email: edwardhdavies@outlook.com
   buttonClear: Clear
   buttonSend: Send message
   email:
-    - email: example@domain.com
+    - email: edwardhdavies@outlook.com
       title: Email
   enable: yes
   phone:
