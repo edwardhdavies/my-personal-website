@@ -13,9 +13,9 @@ params:
   blog: {}
   contact:
     address:
-      - city: London, UK
-        country: soon to be... 
-        street: Berlin, Germany
+      - city: ...soon to be...
+        country: Berlin, Germany 
+        street: London, UK
     buttonClear: Clear
     buttonSend: Send message
     email:
