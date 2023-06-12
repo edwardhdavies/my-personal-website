@@ -1,37 +1,118 @@
-baseURL: https://edward-davies-portfolio.netlify.app/
+baseURL: https://maxcheatle.netlify.app/
 languageCode: en-us
-title: Portfolio Website for Edward Davies
+title: Max Cheatle
 theme: forty
 googleAnalytics: ''
 disqusShortname: ''
 params:
   banner:
-    buttonText: About Me
-    url: /about-me  # <-- Change '/your-page' to the relative URL of your target page
-    # The rest of your parameters go here...
-    title: Hi! My name is Edward Davies...
-  footer:
-    # The rest of your footer parameters go here...
+    buttonText: CV
+    subtitle: |-
+      This website serves as my portfolio for all things data science. Take a look at my CV, or some of work
+    title: Hi, my name is Max
+  blog: {}
+  contact:
+    address:
+      - city: New York City, USA
+        country: Dubai, UAE 
+        street: London, UK
+    buttonClear: Clear
+    buttonSend: Send message
+    email:
+      - email: maxim.cheatle@gmail.com
+        title: Email
     enable: yes
+    phone:
+      - phone: +(44)7792004883
+        title: Phone
+  custom_css: []
+  custom_js: []
+  description: Your description
+  error404:
+    heading: Page couldn't be found
+    text: Please visit [this page](/)
+  favicon: favicon.ico
+  footer:
+    copyright: Maxim Cheatle, 2023
+    enable: yes
+    quicklinks:
+      - alt: HTML5 UP
+        text: 'Design: '
+        url: https://www.html5up.net
     social:
-      - icon: fa-facebook
-        label: Facebook
-        url: https://www.facebook.com/edward.davies.712714
-      - icon: fa-instagram
-        label: Instagram
-        url: https://www.instagram.com/edxdavies/
+#      - icon: fa-twitter
+#        label: Twitter
+#        url: https://www.twitter.com
+#      - icon: fa-facebook
+#        label: Facebook
+#        url: https://www.facebook.com
+#      - icon: fa-instagram
+#        label: Instagram
+#        url: https://www.instagram.com
       - icon: fa-github
         label: GitHub
-        url: https://github.com/edwardhdavies
+        url: https://www.github.com/maxcheatle
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com/in/edwardhdavies/  # <-- replace with your LinkedIn URL
-  # The rest of your parameters go here...
+        url: https://www.linkedin.com/in/maxcheatle
+  image: ''
+  name: Your name
   navigation:
+    button1:
+#      - name: Get Started
+#        url: blogs
+#    button2:
+#      - name: Log In
+#        url: '#'
     links:
       - name: Home
         url: '#'
-      - name: Blogs
+      - name: Portfolio
         url: blogs
-      - name: About Me
-        url: about-me  # This should link to the page you want to navigate to when "Get Started" is clicked
+      - name: CV
+        url: cv
+#      - name: Generic Blog
+#        url: blogs/ipsum
+#      - name: Elements
+#        url: elements.html
+#    menu: Menu
+#    subtitle: By HTML5 Up
+    title: Forty
+  tiles:
+    enable: yes
+    showcase:
+      - image: h1_cover.png
+        subtitle: An exploration of NYC Flights, and Hollywood movie datasets
+        title: Basic Data Manipulation
+        url: blogs/homework1_web
+      - image: h2_cover.png
+        subtitle: Data Visualisation, with data from US mass shootings, credit card fraud, and gloal energy production
+        title: Data Visualisation and Functions
+        url: blogs/homework2_web
+      - image: pic03.jpg
+        subtitle: Lorem Etiam Nullam
+        title: Project 3
+        url: blogs/magna
+      - image: pic04.jpg
+        subtitle: Nisl Sed Aliquam
+        title: Project 4
+        url: blogs/ipsum
+  #    - image: pic05.jpg
+  #      subtitle: Ipsum Dolor Sit Amet
+  #      title: Consequat
+  #      url: blogs/ipsum
+  #    - image: pic06.jpg
+  #      subtitle: Feugiat Amet Tempus
+  #      title: Etiam
+  #      url: blogs/ipsum
+#  two:
+#    buttonText: Get Started
+#    enable: yes
+#    subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
+#      \n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \n    Pellentesque
+#      condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
+#      pellentesque lorem ipsum dolor. \n    Nullam et orci eu lorem consequat tincidunt.
+#      Vivamus et sagittis libero.\n    Mauris aliquet magna magna sed nunc rhoncus
+#      amet pharetra et feugiat tempus."
+#    title: Massa libero
+#    url: blogs
