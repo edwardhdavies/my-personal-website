@@ -1,6 +1,6 @@
-baseURL: https://maxcheatle.netlify.app/
+baseURL: https://edward-davies-portfolio.netlify.app
 languageCode: en-us
-title: Max Cheatle
+title: Edward Davies
 theme: forty
 googleAnalytics: ''
 disqusShortname: ''
@@ -8,22 +8,22 @@ params:
   banner:
     buttonText: CV
     subtitle: |-
-      This website serves as my portfolio for all things data science. Take a look at my CV, or some of work
-    title: Hi, my name is Max
+      Welcome to my website. Feel free to have a look at my CV, as well as some of my datascience projects!
+    title: Edward Henry Davies
   blog: {}
   contact:
     address:
-      - city: New York City, USA
-        country: Dubai, UAE 
-        street: London, UK
+      - city: London, UK
+        country: soon to be... 
+        street: Berlin, Germany
     buttonClear: Clear
     buttonSend: Send message
     email:
-      - email: maxim.cheatle@gmail.com
+      - email: edwardhdavies@outlook.com
         title: Email
     enable: yes
     phone:
-      - phone: +(44)7792004883
+      - phone: +(44)7738612624
         title: Phone
   custom_css: []
   custom_js: []
@@ -33,28 +33,25 @@ params:
     text: Please visit [this page](/)
   favicon: favicon.ico
   footer:
-    copyright: Maxim Cheatle, 2023
+    copyright: Edward Davies, 2023
     enable: yes
     quicklinks:
       - alt: HTML5 UP
         text: 'Design: '
         url: https://www.html5up.net
     social:
-#      - icon: fa-twitter
-#        label: Twitter
-#        url: https://www.twitter.com
-#      - icon: fa-facebook
-#        label: Facebook
-#        url: https://www.facebook.com
-#      - icon: fa-instagram
-#        label: Instagram
-#        url: https://www.instagram.com
+      - icon: fa-facebook
+        label: Facebook
+        url: https://www.facebook.com/edward.davies.712714
+      - icon: fa-instagram
+        label: Instagram
+        url: https://www.instagram.com/edxdavies/
       - icon: fa-github
         label: GitHub
-        url: https://www.github.com/maxcheatle
+        url: https://www.github.com/edwardhdavies
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com/in/maxcheatle
+        url: https://www.linkedin.com/in/edwardhdavies
   image: ''
   name: Your name
   navigation:
