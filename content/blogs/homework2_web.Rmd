@@ -24,6 +24,9 @@ library(skimr)
 library(countrycode)
 library(here)
 library(patchwork)
+library(tidyverse)
+library(nycflights13)
+library(skimr)
 
 ```
 

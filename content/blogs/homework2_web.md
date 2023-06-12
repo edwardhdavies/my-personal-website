@@ -3,1159 +3,754 @@ categories:
 - ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
 - ""
 date: "2021-09-30"
-description: Data Visualisation, with data from US mass shootings, credit card fraud, and gloal energy production  # the title that will show up once someone gets to this page
+description: Investigating a flight database, and understanding the underlying themes across it  # the title that will show up once someone gets to this page
 draft: false
 image: h2_cover.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: homework2_web # slug is the shorthand URL address... no spaces plz
-title: Data Visualisation and Functions
+title: Flights, flights, flights!
 ---
 
 
 
-## Obtain the data
+# Manipulating Dataframes to Investigate patterns in Flight departures and Arrives
 
 
-```
-## Rows: 125
-## Columns: 14
-## $ case                 <chr> "Oxford High School shooting", "San Jose VTA shoo…
-## $ year                 <dbl> 2021, 2021, 2021, 2021, 2021, 2021, 2020, 2020, 2…
-## $ month                <chr> "Nov", "May", "Apr", "Mar", "Mar", "Mar", "Mar", …
-## $ day                  <dbl> 30, 26, 15, 31, 22, 16, 16, 26, 10, 6, 31, 4, 3, …
-## $ location             <chr> "Oxford, Michigan", "San Jose, California", "Indi…
-## $ summary              <chr> "Ethan Crumbley, a 15-year-old student at Oxford …
-## $ fatalities           <dbl> 4, 9, 8, 4, 10, 8, 4, 5, 4, 3, 7, 9, 22, 3, 12, 5…
-## $ injured              <dbl> 7, 0, 7, 1, 0, 1, 0, 0, 3, 8, 25, 27, 26, 12, 4, …
-## $ total_victims        <dbl> 11, 9, 15, 5, 10, 9, 4, 5, 7, 11, 32, 36, 48, 15,…
-## $ location_type        <chr> "School", "Workplace", "Workplace", "Workplace", …
-## $ male                 <lgl> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
-## $ age_of_shooter       <dbl> 15, 57, 19, NA, 21, 21, 31, 51, NA, NA, 36, 24, 2…
-## $ race                 <chr> NA, NA, "White", NA, NA, "White", NA, "Black", "B…
-## $ prior_mental_illness <chr> NA, "Yes", "Yes", NA, "Yes", NA, NA, NA, NA, NA, …
-```
-
-## Explore the data
-
-### Specific questions
-
--   Generate a data frame that summarizes the number of mass shootings per year.
+## Problem 1: Use logical operators to find flights that:
 
 
 ```r
-mass_shootings %>% 
-  
-  # Grouping the date by year
-  group_by(year) %>% 
-  
-  # Counting the number of observations per year
-  summarise(no_of_shootings = n()) %>% 
-  arrange(desc(no_of_shootings))
+# Had an arrival delay of two or more hours (> 120 minutes)
+summary(flights)
 ```
 
 ```
-## # A tibble: 37 × 2
-##     year no_of_shootings
-##    <dbl>           <int>
-##  1  2018              12
-##  2  2017              11
-##  3  2019              10
-##  4  2012               7
-##  5  2015               7
-##  6  2016               6
-##  7  2021               6
-##  8  1999               5
-##  9  2013               5
-## 10  1993               4
-## # ℹ 27 more rows
+##       year          month             day           dep_time    sched_dep_time
+##  Min.   :2013   Min.   : 1.000   Min.   : 1.00   Min.   :   1   Min.   : 106  
+##  1st Qu.:2013   1st Qu.: 4.000   1st Qu.: 8.00   1st Qu.: 907   1st Qu.: 906  
+##  Median :2013   Median : 7.000   Median :16.00   Median :1401   Median :1359  
+##  Mean   :2013   Mean   : 6.549   Mean   :15.71   Mean   :1349   Mean   :1344  
+##  3rd Qu.:2013   3rd Qu.:10.000   3rd Qu.:23.00   3rd Qu.:1744   3rd Qu.:1729  
+##  Max.   :2013   Max.   :12.000   Max.   :31.00   Max.   :2400   Max.   :2359  
+##                                                  NA's   :8255                 
+##    dep_delay          arr_time    sched_arr_time   arr_delay       
+##  Min.   : -43.00   Min.   :   1   Min.   :   1   Min.   : -86.000  
+##  1st Qu.:  -5.00   1st Qu.:1104   1st Qu.:1124   1st Qu.: -17.000  
+##  Median :  -2.00   Median :1535   Median :1556   Median :  -5.000  
+##  Mean   :  12.64   Mean   :1502   Mean   :1536   Mean   :   6.895  
+##  3rd Qu.:  11.00   3rd Qu.:1940   3rd Qu.:1945   3rd Qu.:  14.000  
+##  Max.   :1301.00   Max.   :2400   Max.   :2359   Max.   :1272.000  
+##  NA's   :8255      NA's   :8713                  NA's   :9430      
+##    carrier              flight       tailnum             origin         
+##  Length:336776      Min.   :   1   Length:336776      Length:336776     
+##  Class :character   1st Qu.: 553   Class :character   Class :character  
+##  Mode  :character   Median :1496   Mode  :character   Mode  :character  
+##                     Mean   :1972                                        
+##                     3rd Qu.:3465                                        
+##                     Max.   :8500                                        
+##                                                                         
+##      dest              air_time        distance         hour      
+##  Length:336776      Min.   : 20.0   Min.   :  17   Min.   : 1.00  
+##  Class :character   1st Qu.: 82.0   1st Qu.: 502   1st Qu.: 9.00  
+##  Mode  :character   Median :129.0   Median : 872   Median :13.00  
+##                     Mean   :150.7   Mean   :1040   Mean   :13.18  
+##                     3rd Qu.:192.0   3rd Qu.:1389   3rd Qu.:17.00  
+##                     Max.   :695.0   Max.   :4983   Max.   :23.00  
+##                     NA's   :9430                                  
+##      minute        time_hour                     
+##  Min.   : 0.00   Min.   :2013-01-01 05:00:00.00  
+##  1st Qu.: 8.00   1st Qu.:2013-04-04 13:00:00.00  
+##  Median :29.00   Median :2013-07-03 10:00:00.00  
+##  Mean   :26.23   Mean   :2013-07-03 05:22:54.64  
+##  3rd Qu.:44.00   3rd Qu.:2013-10-01 07:00:00.00  
+##  Max.   :59.00   Max.   :2013-12-31 23:00:00.00  
+## 
 ```
 
--   Generate a bar chart that identifies the number of mass shooters associated with each race category. The bars should be sorted from highest to lowest and each bar should show its number.
+```r
+flights %>% 
+  filter(arr_delay >= 120)
+```
+
+```
+## # A tibble: 10,200 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1     1      811            630       101     1047            830
+##  2  2013     1     1      848           1835       853     1001           1950
+##  3  2013     1     1      957            733       144     1056            853
+##  4  2013     1     1     1114            900       134     1447           1222
+##  5  2013     1     1     1505           1310       115     1638           1431
+##  6  2013     1     1     1525           1340       105     1831           1626
+##  7  2013     1     1     1549           1445        64     1912           1656
+##  8  2013     1     1     1558           1359       119     1718           1515
+##  9  2013     1     1     1732           1630        62     2028           1825
+## 10  2013     1     1     1803           1620       103     2008           1750
+## # ℹ 10,190 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+# Flew to Houston (IAH or HOU)
+
+flights %>% 
+  filter(dest == "TAH" | dest == "HOU")
+```
+
+```
+## # A tibble: 2,115 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1     1     1208           1158        10     1540           1502
+##  2  2013     1     1     1306           1300         6     1622           1610
+##  3  2013     1     1     1708           1700         8     2037           2005
+##  4  2013     1     1     2030           2035        -5     2354           2342
+##  5  2013     1     2      734            700        34     1045           1025
+##  6  2013     1     2     1156           1158        -2     1517           1502
+##  7  2013     1     2     1319           1305        14     1633           1615
+##  8  2013     1     2     1810           1655        75     2146           2000
+##  9  2013     1     2     2031           2035        -4     2353           2342
+## 10  2013     1     3      704            700         4     1036           1025
+## # ℹ 2,105 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+# Were operated by United (`UA`), American (`AA`), or Delta (`DL`)
+
+flights %>% 
+  filter(carrier == "UA" | carrier == "AA" | carrier == "DL")
+```
+
+```
+## # A tibble: 139,504 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      554            600        -6      812            837
+##  5  2013     1     1      554            558        -4      740            728
+##  6  2013     1     1      558            600        -2      753            745
+##  7  2013     1     1      558            600        -2      924            917
+##  8  2013     1     1      558            600        -2      923            937
+##  9  2013     1     1      559            600        -1      941            910
+## 10  2013     1     1      559            600        -1      854            902
+## # ℹ 139,494 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+# Departed in summer (July, August, and September)
+  
+flights %>% 
+  filter(month == 7 | month == 8 | month == 9)
+```
+
+```
+## # A tibble: 86,326 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     7     1        1           2029       212      236           2359
+##  2  2013     7     1        2           2359         3      344            344
+##  3  2013     7     1       29           2245       104      151              1
+##  4  2013     7     1       43           2130       193      322             14
+##  5  2013     7     1       44           2150       174      300            100
+##  6  2013     7     1       46           2051       235      304           2358
+##  7  2013     7     1       48           2001       287      308           2305
+##  8  2013     7     1       58           2155       183      335             43
+##  9  2013     7     1      100           2146       194      327             30
+## 10  2013     7     1      100           2245       135      337            135
+## # ℹ 86,316 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+# Arrived more than two hours late, but didn't leave late
+
+flights %>% 
+  filter(arr_delay >= 120 & dep_delay <= 0)
+```
+
+```
+## # A tibble: 29 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1    27     1419           1420        -1     1754           1550
+##  2  2013    10     7     1350           1350         0     1736           1526
+##  3  2013    10     7     1357           1359        -2     1858           1654
+##  4  2013    10    16      657            700        -3     1258           1056
+##  5  2013    11     1      658            700        -2     1329           1015
+##  6  2013     3    18     1844           1847        -3       39           2219
+##  7  2013     4    17     1635           1640        -5     2049           1845
+##  8  2013     4    18      558            600        -2     1149            850
+##  9  2013     4    18      655            700        -5     1213            950
+## 10  2013     5    22     1827           1830        -3     2217           2010
+## # ℹ 19 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+```r
+# Were delayed by at least an hour, but made up over 30 minutes in flight
+
+flights %>% 
+  filter(dep_delay >= 60 & dep_delay - arr_delay >=30)
+```
+
+```
+## # A tibble: 2,074 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    <int> <int> <int>    <int>          <int>     <dbl>    <int>          <int>
+##  1  2013     1     1     1716           1545        91     2140           2039
+##  2  2013     1     1     2205           1720       285       46           2040
+##  3  2013     1     1     2326           2130       116      131             18
+##  4  2013     1     3     1503           1221       162     1803           1555
+##  5  2013     1     3     1821           1530       171     2131           1910
+##  6  2013     1     3     1839           1700        99     2056           1950
+##  7  2013     1     3     1850           1745        65     2148           2120
+##  8  2013     1     3     1923           1815        68     2036           1958
+##  9  2013     1     3     1941           1759       102     2246           2139
+## 10  2013     1     3     1950           1845        65     2228           2227
+## # ℹ 2,064 more rows
+## # ℹ 11 more variables: arr_delay <dbl>, carrier <chr>, flight <int>,
+## #   tailnum <chr>, origin <chr>, dest <chr>, air_time <dbl>, distance <dbl>,
+## #   hour <dbl>, minute <dbl>, time_hour <dttm>
+```
+
+## Problem 2: What months had the highest and lowest proportion of cancelled flights? Interpret any seasonal patterns. To determine if a flight was cancelled use the following code
+
+<!-- -->
+
+```         
+flights %>% 
+  filter(is.na(dep_time)) 
+```
 
 
 ```r
-mass_shootings %>% 
-  
-  # Removing rows with no race value
-  filter(!is.na(race)) %>% 
-  
-  # Then following the same process as before  
-  group_by(race) %>% 
-  summarise(count = n()) %>% 
-  arrange(desc(count)) %>% 
-  
-  # Now, we plot this into bars
-  ggplot(aes(fct_reorder(race, -count), count)) + 
-  # fct_reorder(race, -count) orders our race categories by count descending
-  
+# What months had the highest and lowest % of cancelled flights?
+# Calculate the total number of flights and cancelled flights for each month
+flights_summary <- flights %>%
+  group_by(year, month) %>%
+  summarise(total_flights = n(), cancelled_flights = sum(is.na(dep_time)))
+```
+
+```
+## `summarise()` has grouped output by 'year'. You can override using the
+## `.groups` argument.
+```
+
+```r
+# Calculate the proportion of cancelled flights for each month
+flights_summary <- flights_summary %>%
+  mutate(prop_cancelled = cancelled_flights / total_flights)
+
+# Determine the months with the highest and lowest proportion of cancelled flights
+highest_prop_cancelled <- flights_summary %>% 
+  arrange(desc(prop_cancelled)) %>% 
+  slice(1)
+
+lowest_prop_cancelled <- flights_summary %>% 
+  arrange(prop_cancelled) %>% 
+  slice(1)
+
+# Interpret any seasonal patterns in the data
+# You can create a bar plot to visualize the proportion of cancelled flights across different months:
+
+library(ggplot2)   # load the ggplot2 package
+
+ggplot(flights_summary, aes(x = month, y = prop_cancelled)) +
   geom_bar(stat = "identity") +
-  
-  # Let's also add text on each column
-  geom_text(aes(label = count, vjust = 1.5)) +
-   
-  # And finally aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Mass shooters by race since 1982", y="Number of Shootings", x="Shooter's Race") +
-  NULL
+  xlab("Month") +
+  ylab("Proportion of cancelled flights") +
+  ggtitle("Proportion of cancelled flights by month")
 ```
 
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="/blogs/homework2_web_files/figure-html/problem-2-1.png" width="672" />
 
--   Generate a boxplot visualizing the number of total victims, by type of location.
+There appears to be no consistent pattern in the proportion of cancelled flights across the year, however, very qualitative assumptions can be made from the following graph. It must be remembered that additional analysis is required to confirm these assumptions.
+
+The months that appear to have the highest proportion of cancellations are February, June, July and December.
+
+December is likely to have increased cancellations due to winter weather. February is often a stormy month in many countries. For example, this is seen particularly in the US as this is when their own Winter storms occur, such as the recent Winter Storm Olive.
+
+June and July are likely to have a higher proportion of cancellations and this is a very busy time for flying, with it being the start of summer. Airlines will often be at capacity during this period, and increase strain will likely increase the proportion of issues and therefore cancellations.
+
+## Problem 3: What plane (specified by the `tailnum` variable) traveled the most times from New York City airports in 2013? Please `left_join()` the resulting table with the table `planes` (also included in the `nycflights13` package).
+
+For the plane with the greatest number of flights and that had more than 50 seats, please create a table where it flew to during 2013.
 
 
 ```r
-mass_shootings %>% 
-  
-  # We want a boxplot, therefore we don't need to generate any calculations
-  ggplot(aes(x=location_type, y=total_victims, color = location_type)) +
-  geom_boxplot() +
-  
-  # Now let's add some aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Boxplot of number of victims by mass shooting location", y = "Number of Victims", x = NULL, color = "Location Type") +
-  NULL
+top_plane_tailnum <- planes %>%
+  filter(seats > 50) %>%
+  select(tailnum) %>%
+  left_join(flights, by = "tailnum") %>%
+  filter(year == 2013, origin %in% c("LGA", "JFK", "EWR")) %>%
+  group_by(tailnum) %>%
+  summarise(num_flights = n()) %>%
+  filter(num_flights == max(num_flights)) %>%
+  pull(tailnum)
+
+top_plane_tailnum
+```
+
+```
+## [1] "N328AA"
+```
+
+```r
+top_plane_routes <- flights %>%
+  filter(year == 2013, tailnum == top_plane_tailnum) %>%
+  group_by(dest) %>%
+  summarise(num_flights = n()) %>%
+  arrange(desc(num_flights))
+
+top_plane_routes
+```
+
+```
+## # A tibble: 6 × 2
+##   dest  num_flights
+##   <chr>       <int>
+## 1 LAX           313
+## 2 SFO            52
+## 3 MIA            25
+## 4 BOS             1
+## 5 MCO             1
+## 6 SJU             1
+```
+
+N328AA (an American Airlines Boeing 767-223ER) is the plane with the greatest number of flights from NYC airports in 2013.
+
+## Problem 4: The `nycflights13` package includes a table (`weather`) that describes the weather during 2013. Use that table to answer the following questions:
+
+**What is the distribution of temperature (\`temp\`) in July 2013? Identify any important outliers in terms of the \`wind_speed\` variable.**
+
+
+```r
+weather
+```
+
+```
+## # A tibble: 26,115 × 15
+##    origin  year month   day  hour  temp  dewp humid wind_dir wind_speed
+##    <chr>  <int> <int> <int> <int> <dbl> <dbl> <dbl>    <dbl>      <dbl>
+##  1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4 
+##  2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06
+##  3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5 
+##  4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7 
+##  5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7 
+##  6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5 
+##  7 EWR     2013     1     1     7  39.0  28.0  64.4      240      15.0 
+##  8 EWR     2013     1     1     8  39.9  28.0  62.2      250      10.4 
+##  9 EWR     2013     1     1     9  39.9  28.0  62.2      260      15.0 
+## 10 EWR     2013     1     1    10  41    28.0  59.6      260      13.8 
+## # ℹ 26,105 more rows
+## # ℹ 5 more variables: wind_gust <dbl>, precip <dbl>, pressure <dbl>,
+## #   visib <dbl>, time_hour <dttm>
+```
+
+```r
+weather %>%
+  filter(month == 7, year == 2013) %>%
+  ggplot(aes(x = temp)) +
+  geom_histogram(binwidth = 1, fill = "lightblue") +
+  labs(title = "Temperature Distribution in July 2013",
+       x = "Temperature (F)", y = "Count")
 ```
 
 <img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
--   Redraw the same plot, but remove the Las Vegas Strip massacre from the dataset.
+From the plot, we can see that the distribution of temperature is roughly normal, with a peak around 80 degrees Fahrenheit. There are a few outliers with very high wind speeds, which we can identify using a scatter plot of temperature against wind speed:
 
 
 ```r
-mass_shootings %>% 
-  # Now let's filter out the Las Vegas Strip shooting, the above plot wasn't very useful
-  filter(total_victims < 600) %>% 
-  
-  # We want a boxplot, therefore we don't need to generate any calculations
-  ggplot(aes(x=location_type, y=total_victims, fill = location_type)) +
-  geom_boxplot() +
-  
-  # Now let's add some aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Boxplot of number of victims by mass shooting location", caption = "Excludes Las Vegas Strip shooting, 2017", y = "Number of Victims", x = NULL, fill = "Location Type") +
-  NULL
+weather %>%
+  filter(month == 7, year == 2013) %>%
+  ggplot(aes(x = temp, y = wind_speed)) +
+  geom_point() +
+  labs(title = "Temperature vs. Wind Speed in July 2013",
+       x = "Temperature (F)", y = "Wind Speed (mph)")
+```
+
+```
+## Warning: Removed 2 rows containing missing values (`geom_point()`).
 ```
 
 <img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-6-1.png" width="672" />
 
-### More open-ended questions
+We can see that there are a few points with very high wind speeds (\> 22.5 mph). These points could be considered outliers in terms of the wind speed variable.
 
-Address the following questions. Generate appropriate figures/tables to support your conclusions.
-
--   How many white males with prior signs of mental illness initiated a mass shooting after 2000?
+**- What is the relationship between \`dewp\` and \`humid\`?**
 
 
 ```r
-mass_shootings %>% 
-  
-  # First we filter for only shootings committed by while males
-  filter(race == "White", male == "TRUE") %>% 
-  
-  # I don't filter out mental illness, since it'd be good to keep non-mental illness events for comparison. I group by prior_mental_illness instead
-  group_by(prior_mental_illness) %>% 
-  
-  # Then summarise to count the number of events by prior illness category
-  summarise(n())
+weather %>%
+  ggplot(aes(x = dewp, y = humid)) +
+  geom_point(alpha = 0.2) +
+  labs(title = "Relationship between Dew Point and Humidity",
+       x = "Dew Point (F)", y = "Humidity (%)")
 ```
 
 ```
-## # A tibble: 3 × 2
-##   prior_mental_illness `n()`
-##   <chr>                <int>
-## 1 No                       9
-## 2 Yes                     38
-## 3 <NA>                    19
+## Warning: Removed 1 rows containing missing values (`geom_point()`).
 ```
 
--   Which month of the year has the most mass shootings? Generate a bar chart sorted in chronological (natural) order (Jan-Feb-Mar- etc) to provide evidence of your answer.
-    -   February has the highest number of mass shootings, with 13
+<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+
+We can see that there is a strong positive relationship between **`dewp`** and **`humid`**. As the dew point temperature increases, the humidity also tends to increase.
+
+**- What is the relationship between \`precip\` and \`visib\`?**
 
 
 ```r
-mass_shootings %>% 
-  
-  # First and foremost, group by month and count the number of shootings
-  group_by(month) %>% 
-  summarise(count = n()) %>% 
-
-  # Then plot as bar chart
-  ggplot(aes(x=month, y=count)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(label = count, vjust = 1.5)) +
-  
-  # Reordering our data by months, using month.abb since our data uses abbreviated month names
-  scale_x_discrete(limits = month.abb) +
-  
-  # Finally, aesthetic modifications
-  ggthemes::theme_stata() +
-  labs(title = "Mass shootings by month", x = "Month", y = "Number of Mass Shooting Events", fill = "Number of Victims")
+weather %>%
+  ggplot(aes(x = precip, y = visib)) +
+  geom_point(alpha = 0.2) +
+  labs(title = "Relationship between Precipitation and Visibility",
+       x = "Precipitation (inches)", y = "Visibility (miles)")
 ```
 
 <img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 
--   How does the distribution of mass shooting fatalities differ between White and Black shooters? What about White and Latino shooters?
-    -   From the first plot, we can see that the total fatalities caused by White shooters is significantly higher than for Black and Latino shooters.
+Although it would be plausible to think that higher precipitation will lead to lower visibility, there does not seem to be a strong relationship between the two, as seen through the large variety in visibility at similar levels of precipitation.
 
-    -   From the second plot, we also see that mass shootings by White shooters tend to lead to more fatalities per event, and that there are many occasions of White shooters causing more fatalities than maximum ever caused by Black or Latino shooters.
+## Problem 5: Use the `flights` and `planes` tables to answer the following questions
 
-
-```r
-# Firstly, let's look at total fatalities in the database to gain an overview
-
-mass_shootings %>%
-  
-  # First grouping by race for counting
-  group_by(race) %>% 
-  
-  # Filtering for the race groups of interest
-  filter(race == "White" | race == "Black" | race == "Latino") %>% 
-  summarise(total_fatalities = sum(fatalities)) %>% 
-  
-  # Now plotting to visualise the differences
-
-  ggplot(aes(x=fct_reorder(race, -total_fatalities), y=total_fatalities, fill = race)) + 
-  geom_bar(stat = "identity") +
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Total fatalities by race", x = "Race", y = "Total Fatalities", fill = "Race") +
-  NULL
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-9-1.png" width="672" />
-
-```r
-# Now we do the same, but with a looking at the distribution of fatalities per mass shooting event, for each race of interest
-
-mass_shootings %>%
-  
-  # First grouping by race
-  group_by(race) %>% 
-  
-  # Filtering for the race groups of interest
-  filter(race == "White" | race == "Black" | race == "Latino") %>% 
-  
-  # Now plotting to visualise the differences
-
-  ggplot(aes(y=fatalities, fill = race)) + 
-  geom_boxplot() +
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Total fatalities by race", x = "Race", y = "Total Fatalities", fill = "Race") +
-  NULL
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-9-2.png" width="672" />
-
-```r
-# Finally, let's repeat without the Las Vegas Shooting to create a clearer picture without the significant outlier
-
-mass_shootings %>%
-  
-  # First grouping by race
-  group_by(race) %>% 
-  
-  # Filtering for the race groups of interest and to remove LV shooting
-  filter(race == "White" | race == "Black" | race == "Latino" & total_victims < 600) %>% 
-  
-  # Now plotting to visualise the differences
-
-  ggplot(aes(y=fatalities, fill = race)) + 
-  geom_boxplot() +
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Total fatalities by race", x = "Race", y = "Total Fatalities", fill = "Race") +
-  
-  # Removing irrelevant x-axis ticks
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-  NULL
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-9-3.png" width="672" />
-
-### Very open-ended
-
--   Are mass shootings with shooters suffering from mental illness different from mass shootings with no signs of mental illness in the shooter?
-    -   Immediately, we see that the fatalities, injuries, and subsequently total victims in mass shooting perpetrated by those with prior mental illnesses all experience greater variability. That is, their interquartile range is wider.
-
-    -   Furthermore, the median fatality and injury count is larger when the shooter has suffered a prior mental illness. There are also much more significant outliers above Q3 in the presence of prior mental illness.
-
-    -   Regarding locations, mass shooters with prior mental illnesses are the only ones who commit said crimes in airports, military, and religious facilities.
-
-    -   Overall, it would appear that mass shootings by those with prior mental illnesses are more severe, and in a greater variety of locations (arguably more problematic locations, depending on perspective/measurement method).
+**- How many planes have a missing date of manufacture?**
 
 
 ```r
-# First, let's check if prior mental illnesses lead to differences in magnitude of total victims, fatalities, or injuries
-
-mass_shootings %>% 
-  
-  # Grouping my mental illness for comparative analysis
-  group_by(prior_mental_illness) %>% 
-  select(prior_mental_illness, fatalities, injured, total_victims) %>% 
-  
-  # Need to remove the Las Vegas shooting again for comparison without significant outlier
-  filter(total_victims < 600) %>% 
-  
-  # Also removing NAs for removal of doubt and to reduce information overload
-  filter(!is.na(prior_mental_illness)) %>% 
-  
-  # We need to long the data for the visualistion I'd like to use
-  pivot_longer(cols = c(fatalities, injured, total_victims), values_to = "value", names_to = "variable") %>% 
-  
-  # Plotting in facet_wrap for overview
-  ggplot(aes(y=value, fill=prior_mental_illness)) +
-  geom_boxplot() +
-  facet_wrap(~variable) +
-
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Fatalties and injuries in mass shootings", subtitle = "Seperated by presence of prior mental illness", x = NULL, y = "Total Fatalities", fill = "Prior Mental Illness", caption = "Excludes Las Vegas Strip shooting, 2017") +
-  
-  # Removing irrelevant x-axis labelling
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-  NULL
+planes
 ```
 
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+```
+## # A tibble: 3,322 × 9
+##    tailnum  year type              manufacturer model engines seats speed engine
+##    <chr>   <int> <chr>             <chr>        <chr>   <int> <int> <int> <chr> 
+##  1 N10156   2004 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+##  2 N102UW   1998 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  3 N103US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  4 N104UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  5 N10575   2002 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+##  6 N105UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  7 N107US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  8 N108UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  9 N109UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+## 10 N110UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+## # ℹ 3,312 more rows
+```
 
 ```r
-# Let's take a look from another angle. Do prior mental illnesses lead to different mass shooting locations?
+missingmanufacturedate <- planes %>% 
+  filter(is.na(year)) %>% 
+  count()
 
-mass_shootings %>% 
-  
-  # Grouping my mental illness for comparative analysis
-  group_by(prior_mental_illness, location_type) %>%
-  
-  # Removing nulls
-  filter(!is.na(prior_mental_illness)) %>% 
-  
-  # Finding the % of occurences per location
-  summarise(count = n()) %>% 
-  
-  # Plotting for efficient comparison
-  
-  ggplot(aes(y=count, x=location_type, fill = prior_mental_illness)) + 
-  geom_bar(stat = "identity") + 
-  facet_wrap(~prior_mental_illness) +
-  
-   # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Occurence of mass shooting by location", subtitle = "Seperated by presence of prior mental illness", x = NULL, y = "Mass Shooting", fill = "Prior Mental Illness") +
-  
-  # Adjusting x axis for readability
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  NULL
+missingmanufacturedate
 ```
 
 ```
-## `summarise()` has grouped output by 'prior_mental_illness'. You can override
-## using the `.groups` argument.
+## # A tibble: 1 × 1
+##       n
+##   <int>
+## 1    70
 ```
 
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-10-2.png" width="672" />
+There are 70 planes with a missing date of manufacture.
 
--   Assess the relationship between mental illness and total victims, mental illness and location type, and the intersection of all three variables.
-    -   As above, the three most significant differences here are that the only mass shootings in airports, military facilities, and religious venues, are perpetrated by those with prior mental illnesses.
-
-    -   Moreover, the variation of total fatalities is significantly wider in school mass shootings where the shooter has a prior mental illness, and slightly wider for the same case in workplace mass shootings.
+**- What are the five most common manufacturers?**
 
 
 ```r
-# I used two of those examples in my above analysis (without looking ahead). So... I'll add here the 'intersection of all three variables' part.
+planes %>% 
+  mutate(manufacturer = recode(manufacturer, `AIRBUS INDUSTRIE` = 'AIRBUS')) %>%
+  count(manufacturer, sort = TRUE) %>% 
+  head(5)
+```
 
-mass_shootings %>% 
-  
-  # Grouping my mental illness for comparative analysis
-  group_by(prior_mental_illness, location_type) %>%
-  
-  # Removing nulls and counting the total total_victims in each illness & location pairing
-  filter(!is.na(prior_mental_illness)) %>%
-  
-  # Now plotting, planning to use a facet_grid here
-  ggplot(aes(y=total_victims, fill = prior_mental_illness)) +
-  geom_boxplot() +
-  facet_grid(row=vars(location_type), col=vars(prior_mental_illness)) +
-  
-    # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Total victims in mass shootings", subtitle = "Seperated by presence of prior mental illness, and location type", x = NULL, y = "Total Victims", fill = "Prior Mental Illness") +
-  
-  # Removing irrelevant x-axis labelling
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
-  NULL
+```
+## # A tibble: 5 × 2
+##   manufacturer          n
+##   <chr>             <int>
+## 1 BOEING             1630
+## 2 AIRBUS              736
+## 3 BOMBARDIER INC      368
+## 4 EMBRAER             299
+## 5 MCDONNELL DOUGLAS   120
+```
+
+The five most common manufacturers are Boeing, McDonnell Douglas, Bombardier, Airbus and Embraer.
+
+**- Has the distribution of manufacturer changed over time as reflected by the airplanes flying from NYC in 2013? (Hint: you may need to use case_when() to recode the manufacturer name and collapse rare vendors into a category called Other.)\
+**
+
+
+```r
+tailnums_from_NYC <- flights %>%
+  filter(origin %in% c("LGA", "JFK", "EWR")) %>%
+  distinct(tailnum) %>%
+  rename(tailnum = tailnum)
+
+planes_dept_nyc <- left_join(tailnums_from_NYC, planes, by = "tailnum") %>%
+  select(tailnum, manufacturer, year)
+
+planes_dept_nyc <- planes_dept_nyc %>%
+  mutate(manufacturer = case_when(
+    manufacturer %in% c("AIRBUS INDUSTRIE", "AIRBUS") ~ "AIRBUS",
+    manufacturer %in% c("MCDONNELL DOUGLAS", "MCDONNELL DOUGLAS AIRCRAFT CO", "MCDONNELL DOUGLAS CORPORATION") ~ "MCDONNELL",
+    manufacturer == "BOEING" ~ "BOEING",
+    manufacturer == "EMBRAER" ~ "EMBRAER",
+    manufacturer == "BOMBARDIER" ~ "BOMBARDIER",
+    TRUE ~ "OTHER"
+  )) %>%
+
+  group_by(year, manufacturer) %>%
+  summarise(planes_manufactured = n()) %>%
+  arrange(desc(planes_manufactured))
+```
+
+```
+## `summarise()` has grouped output by 'year'. You can override using the
+## `.groups` argument.
+```
+
+```r
+ggplot(planes_dept_nyc, aes(x = year, y = planes_manufactured, color = manufacturer)) +
+  geom_line(size = 2, alpha = 0.7) +
+  scale_y_continuous(limits = c(0, 150)) +
+  theme_minimal() +
+  labs(title = "Number of Planes from each Manufacturer over Time")
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## Warning: Removed 5 rows containing missing values (`geom_line()`).
 ```
 
 <img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
-# Exploring credit card fraud
+Over time, less popular plane manufacters such as Embraer and McDonnell have fallen into obscurity. Although the market became more fragmented prior to 2010, it is clear now that the market is mainly consolidated between Airbus and Boeing.
 
-## Obtain the data
-
-The dataset is too large to be hosted on Canvas or Github, so please download it from dropbox <https://www.dropbox.com/sh/q1yk8mmnbbrzavl/AAAxzRtIhag9Nc_hODafGV2ka?dl=0> and save it in your `dsb` repo, under the `data` folder
-
-
-```
-## Rows: 671,028
-## Columns: 14
-## $ trans_date_trans_time <dttm> 2019-02-22 07:32:58, 2019-02-16 15:07:20, 2019-…
-## $ trans_year            <dbl> 2019, 2019, 2019, 2019, 2019, 2019, 2019, 2020, …
-## $ category              <chr> "entertainment", "kids_pets", "personal_care", "…
-## $ amt                   <dbl> 7.79, 3.89, 8.43, 40.00, 54.04, 95.61, 64.95, 3.…
-## $ city                  <chr> "Veedersburg", "Holloway", "Arnold", "Apison", "…
-## $ state                 <chr> "IN", "OH", "MO", "TN", "CO", "GA", "MN", "AL", …
-## $ lat                   <dbl> 40.1186, 40.0113, 38.4305, 35.0149, 39.4584, 32.…
-## $ long                  <dbl> -87.2602, -80.9701, -90.3870, -85.0164, -106.385…
-## $ city_pop              <dbl> 4049, 128, 35439, 3730, 277, 1841, 136, 190178, …
-## $ job                   <chr> "Development worker, community", "Child psychoth…
-## $ dob                   <date> 1959-10-19, 1946-04-03, 1985-03-31, 1991-01-28,…
-## $ merch_lat             <dbl> 39.41679, 39.74585, 37.73078, 34.53277, 39.95244…
-## $ merch_long            <dbl> -87.52619, -81.52477, -91.36875, -84.10676, -106…
-## $ is_fraud              <dbl> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
-```
-
--   In this dataset, how likely are fraudulent transactions? Generate a table that summarizes the number and frequency of fraudulent transactions per year.
-
-
-```r
-card_fraud %>% 
-  
-  # First grouping by year to get a year-by-year summary
-  group_by(trans_year) %>% 
-  
-  # Here, we count the total transactions, the number that were marked as fraudulent, and the subsequent fraud rate rounded to 2 decimals
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2))
-```
-
-```
-## # A tibble: 2 × 4
-##   trans_year total_trans fraud_trans pct_fraud
-##        <dbl>       <int>       <int>     <dbl>
-## 1       2019      478646        2721      0.57
-## 2       2020      192382        1215      0.63
-```
-
--   How much money (in US$ terms) are fraudulent transactions costing the company? Generate a table that summarizes the total amount of legitimate and fraudulent transactions per year and calculate the % of fraudulent transactions, in US$ terms.
-
-
-```r
-card_fraud %>% 
-  
-  # First grouping by year to get a year-by-year summary
-  group_by(trans_year) %>% 
-  
-  # Now we sum the total amount of transactions, the amount of transactions where fraud is marked true, and the subsequent percentage rounded to 2 decimals
-  summarise(total_amt = sum(amt), fraud_amt = sum(ifelse(is_fraud == 1, amt, 0)), pct_fraud_amt = round(fraud_amt/total_amt*100,2))
-```
-
-```
-## # A tibble: 2 × 4
-##   trans_year total_amt fraud_amt pct_fraud_amt
-##        <dbl>     <dbl>     <dbl>         <dbl>
-## 1       2019 33606041.  1423140.          4.23
-## 2       2020 13577863.   651949.          4.8
-```
-
--   Generate a histogram that shows the distribution of amounts charged to credit card, both for legitimate and fraudulent accounts. Also, for both types of transactions, calculate some quick summary statistics.
-
-
-```r
-card_fraud %>% 
-  filter(is_fraud == 0) %>%  # Added in response to note below RE: comparing on same axes
-  ggplot(aes(x=amt)) +
-  geom_histogram(binwidth = 20) + # Lower binwidths are harder to interpret, but higher binwidth is less telling information, so have taken a balance here
-  
-  # facet_wrap(~ is_fraud) + 
-  
-  # Frequencies are so different, it's not possible to compare on same axis. Instead, let's make a separate histrogram for each is_fraud value
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Histogram of Transaction Amounts", subtitle = "Non-fraudelent Transactions", x= "Transaction Amount (US$)", y= "Count")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-15-1.png" width="672" />
-
-```r
-# Now for fraudulent transaction
-card_fraud %>% 
-  filter(is_fraud == 1) %>%  # Added in response to note below RE: comparing on same axes
-  ggplot(aes(x=amt)) +
-  geom_histogram(binwidth = 20) + # Lower binwidth is possible here but kept the same for comparison to above plot
-  
-  # facet_wrap(~ is_fraud) + 
-  
-  # Frequencies are so different, it's not possible to compare on same axis. Instead, let's make a separate histrogram for each is_fraud value
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Histogram of Transaction Amounts", subtitle = "Fraudelent Transactions", x= "Transaction Amount (US$)", y= "Count")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-15-2.png" width="672" />
-
-```r
-# Summary statistics
-card_fraud %>% 
-  
-  # Changing fraud values 0,1 to more readable names
-  mutate(is_fraud = case_when(
-    is_fraud == 1 ~ "Fraud",
-    is_fraud == 0 ~ "Legitimate"
-  )) %>% 
-  group_by(is_fraud) %>% 
-  
-  # Calculating key summary statistics; mean, median, min/max, standard deviation, q25, q75
-  summarise(mean = mean(amt), median = median(amt), min = min(amt), max = max(amt), sd = sd(amt), q25 = quantile(amt, 0.25), q75 = quantile(amt, 0.75))
-```
-
-```
-## # A tibble: 2 × 8
-##   is_fraud    mean median   min    max    sd   q25   q75
-##   <chr>      <dbl>  <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>
-## 1 Fraud      527.   369.   1.06  1334.  391. 240.  901. 
-## 2 Legitimate  67.6   47.2  1    27120.  155.   9.6  82.4
-```
-
--   What types of purchases are most likely to be instances of fraud? Consider category of merchants and produce a bar chart that shows % of total fraudulent transactions sorted in order.
-    -   groceries_pos and shopping_net are by far the most frequent categories subject to fraudulent spending, combining for more than 40% of fraudulent transactions
-    -   misc_net, shopping_pos, and gas_transport are all significant categories too, around the 10% mark respectively
-    -   The rest of the categories all perform very similarly, less than 5%
-
-
-```r
-# First I want the total number of transcations stored as a value, to make life easier for our ggplot code
-total_fraud_trans <- card_fraud %>% 
-  filter(is_fraud == 1) %>%
-  summarise(total_fraud_trans = n()) %>% 
-  
-  # Use pull() to retreive the number only (not as a tibble)
-  pull(total_fraud_trans)
-
-card_fraud %>% 
-  filter(is_fraud == 1) %>% 
-  group_by(category) %>% 
-  
-  # Now we count the fraudulent transaction per category, and divide by the total value that we saved previously
-  summarise(fraud_trans = n(), pct = round(fraud_trans/total_fraud_trans*100,2)) %>% 
-  
-  # Finally, plotting to bar chart
-  ggplot(aes(y=pct, x=reorder(category, -pct))) +
-  geom_bar(stat = "identity") +
-
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Bar Chart of % of Fraudlent Transactions by Merchant Category", x = NULL, y = "Percentage", fill = NULL) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-16-1.png" width="672" />
-
--   When is fraud more prevalent? Which days, months, hours? To create new variables to help you in your analysis, we use the `lubridate` package and the following code
-    -   Fraud as a percentage of total transactions:
-        -   January and February are the most common months for fraud, with over 0.75% of transactions being fraudulent
-            -   In terms of seasonality, it would appear that fraud is more frequent in the winter months, excluding December which is the lowest month for fraud all year
-            -   Perhaps something to explore is the raw number of fraudulent transactions, since the number of total transactions may be higher in December, therefore lowering the percentage of fraud even if fraud is just as prevalent
-        -   Fraud is most common at the end of the working week (Wed, Thur, Fri), and lowest over the weekends
-            -   Similar to above, perhaps the total number of transactions is highest on weekends, so it may be useful to check the raw number of fraudulent transactions
-        -   By a significant margin, fraud is most common between 10pm and 3am (overnight)
-    -   Fraud measured by number of instances of fraudulent transactions:
-        -   January to June are now dominant for fraudulent transactions, as opposed to only January and February previously
-            -   December also sees a higher number of fraudulent transactions, suggesting that the low % was driven by a large total number of transactions
-        -   In terms of days, our second plot shows that fraud is more likely on the weekends, and Monday - the trend here has reversed
-        -   Nil change for hours of the day when looking at instances rather than percentage
-
-<!-- -->
+## Problem 6: Use the `flights` and `planes` tables to answer the following questions:
 
 ```         
-mutate(
-  date_only = lubridate::date(trans_date_trans_time),
-  month_name = lubridate::month(trans_date_trans_time, label=TRUE),
-  hour = lubridate::hour(trans_date_trans_time),
-  weekday = lubridate::wday(trans_date_trans_time, label = TRUE)
-  )
+-   What is the oldest plane (specified by the tailnum variable) that flew from New York City airports in 2013?
+-   How many airplanes that flew from New York City are included in the planes table?
 ```
+
+N381AA is the oldest plane that flew from NYC airports in 2013
 
 
 ```r
-# Let's find out which days, months, and hours experience the most prevelant fraud
-
-card_fraud_times <- card_fraud %>% 
-  mutate(
-  date_only = lubridate::date(trans_date_trans_time),
-  month_name = lubridate::month(trans_date_trans_time, label=TRUE),
-  hour = lubridate::hour(trans_date_trans_time),
-  weekday = lubridate::wday(trans_date_trans_time, label = TRUE)
-  ) %>% 
-  
-  # Let's reduce our selection to only the columns of interest for clarity
-  select(date_only, month_name, hour, weekday, is_fraud) 
-
-# Now let's group by months, and find out which are the worst for fraud
-
-card_fraud_times %>% 
-  group_by(month_name) %>% 
-  
-  # Here I summarise to find the number of transactions in each month, the number of fraudulent transactions, and the subsequent percentage
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
-  
-  # Now I'm going to plot for clarity, it will also help see if there is any seasonality
-  ggplot(aes(x = month_name, y = pct_fraud)) +
-  geom_bar(stat = "identity") +
-  
-  # Now aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Percentage of transactions flagged as fraudulent per month", y = "% Fraud", x = "Month")
+# What is the oldest plane (specified by the tailnum variable) that flew from New York City airports in 2013?
+flights %>% 
+  filter(year == 2013, origin %in% c("JFK", "LGA", "EWR")) %>% 
+  select(tailnum) %>% 
+  distinct() %>% 
+  left_join(planes %>% 
+              select(tailnum, year) %>% 
+              group_by(tailnum) %>% 
+              summarise(min_year = min(year, na.rm = TRUE)), 
+            by = "tailnum") %>% 
+  arrange(min_year) %>% 
+  slice_head(n = 1)
 ```
 
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+```
+## Warning: There were 70 warnings in `summarise()`.
+## The first warning was:
+## ℹ In argument: `min_year = min(year, na.rm = TRUE)`.
+## ℹ In group 187: `tailnum = "N14558"`.
+## Caused by warning in `min()`:
+## ! no non-missing arguments to min; returning Inf
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 69 remaining warnings.
+```
+
+```
+## # A tibble: 1 × 2
+##   tailnum min_year
+##   <chr>      <dbl>
+## 1 N381AA      1956
+```
 
 ```r
-# Repeating for days instead of months
+# How many airplanes that flew from New York City are included in the planes table?
+flights %>% 
+  filter(origin %in% c("JFK", "LGA", "EWR")) %>% 
+  select(tailnum) %>% 
+  distinct() %>% 
+  left_join(planes %>% 
+              select(tailnum) %>% 
+              distinct(), 
+            by = "tailnum") %>% 
+  count()
+```
+
+```
+## # A tibble: 1 × 1
+##       n
+##   <int>
+## 1  4044
+```
+
+4044 planes that flew from NYC are included in the planes table.
+
+## Problem 7: Use the `nycflights13` to answer the following questions:
+
+```         
+-   What is the median arrival delay on a month-by-month basis in each airport?
+-   For each airline, plot the median arrival delay for each month and origin airport.
+```
+
+**- What is the median arrival delay on a month-by-month basis in each airport?**
+
+
+```r
+flights %>%
+  group_by(month, origin) %>%
+  summarise(median_arr_delay = median(arr_delay, na.rm = TRUE))
+```
+
+```
+## `summarise()` has grouped output by 'month'. You can override using the
+## `.groups` argument.
+```
+
+```
+## # A tibble: 36 × 3
+## # Groups:   month [12]
+##    month origin median_arr_delay
+##    <int> <chr>             <dbl>
+##  1     1 EWR                   0
+##  2     1 JFK                  -7
+##  3     1 LGA                  -4
+##  4     2 EWR                  -2
+##  5     2 JFK                  -5
+##  6     2 LGA                  -4
+##  7     3 EWR                  -4
+##  8     3 JFK                  -7
+##  9     3 LGA                  -7
+## 10     4 EWR                  -1
+## # ℹ 26 more rows
+```
+
+**- For each airline, plot the median arrival delay for each month and origin airport.**
+
+
+```r
+flights %>%
+  group_by(carrier, month, origin) %>%
+  summarise(median_arr_delay = median(arr_delay, na.rm = TRUE)) %>%
+  ggplot(aes(x = month, y = median_arr_delay, color = origin)) +
+  geom_line() +
+  facet_wrap(~ carrier, scales = "free_y")
+```
+
+```
+## `summarise()` has grouped output by 'carrier', 'month'. You can override using
+## the `.groups` argument.
+```
+
+<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+
+## Problem 8: Let's take a closer look at what carriers service the route to San Francisco International (SFO). Join the `flights` and `airlines` tables and count which airlines flew the most to SFO. Produce a new dataframe, `fly_into_sfo` that contains three variables: the `name` of the airline, e.g., `United Air Lines Inc.` not `UA`, the count (number) of times it flew to SFO, and the `percent` of the trips that that particular airline flew to SFO.
+
+
+```r
+# Join flights and airlines tables
+fly_sfo <- flights %>%
+  filter(dest == "SFO") %>%
+  left_join(airlines, by = "carrier") 
+
+# Count flights by airline
+fly_into_sfo <- fly_sfo %>%
+  group_by(name) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  mutate(percent = round((count/sum(count))*100, 2))
+
+# View fly_into_sfo dataframe
+fly_into_sfo
+```
+
+```
+## # A tibble: 5 × 3
+##   name                   count percent
+##   <chr>                  <int>   <dbl>
+## 1 United Air Lines Inc.   6819   51.2 
+## 2 Virgin America          2197   16.5 
+## 3 Delta Air Lines Inc.    1858   13.9 
+## 4 American Airlines Inc.  1422   10.7 
+## 5 JetBlue Airways         1035    7.76
+```
+
+And here is some bonus ggplot code to plot the dataframe:
+
+
+```r
+fly_into_sfo %>% 
   
-card_fraud_times %>% 
-  group_by(weekday) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
+  # sort 'name' of airline by the numbers it times to flew to SFO
+  mutate(name = fct_reorder(name, count)) %>% 
+  
   ggplot() +
-  geom_bar(aes(x = weekday, y = pct_fraud), stat = "identity") +
-  ggthemes::theme_stata() +
-  labs(title = "Percentage of transactions flagged as fraudulent per day", y = "% Fraud", x = "Day")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-17-2.png" width="672" />
-
-```r
-# Repeating for hours instead of days
-
-card_fraud_times %>% 
-  group_by(hour) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
-  ggplot(aes(x = hour, y = pct_fraud)) +
-  geom_bar(stat = "identity") +
-  ggthemes::theme_stata() +
-  labs(title = "Percentage of transactions flagged as fraudulent by hour", y = "% Fraud", x = "Hour")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-17-3.png" width="672" />
-
-
-```r
-# As discussed, lets also look at raw fraudulent transactions data, just in case our percentages were biased by the total number of transactions (denominator), rather than any change to fraud behaviour
-
-# First by month, using the same code but with ggplot changes
-
-card_fraud_times %>% 
-  group_by(month_name) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
   
-  # This is the only line of code I have altered from above
-  ggplot(aes(x = month_name, y = fraud_trans)) +
-  geom_bar(stat = "identity") +
-  ggthemes::theme_stata() +
-  labs(title = "Number of transactions flagged as fraudulent per month", y = "Instances of Fraud", x = "Month")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-18-1.png" width="672" />
-
-```r
-# Repeating for days instead of months
+  aes(x = count, 
+      y = name) +
   
-card_fraud_times %>% 
-  group_by(weekday) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
+  # a simple bar/column plot
+  geom_col() +
   
-  # This is the only line of code I have altered from above
-  ggplot(aes(x = weekday, y = fraud_trans)) +
-  geom_bar(stat = "identity") +
-  ggthemes::theme_stata() +
-  labs(title = "Number of transactions flagged as fraudulent per day", y = "Instances of Fraud", x = "Day")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-18-2.png" width="672" />
-
-```r
-# Repeating for hours instead of days
-
-card_fraud_times %>% 
-  group_by(hour) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
+  # add labels, so each bar shows the % of total flights 
+  geom_text(aes(label = percent),
+             hjust = 1, 
+             colour = "white", 
+             size = 5)+
   
-  # This is the only line of code I have altered from above
-  ggplot(aes(x = hour, y = fraud_trans)) +
-  geom_bar(stat = "identity") +
-  ggthemes::theme_stata() +
-  labs(title = "Number of transactions flagged as fraudulent per day", y = "Instances of Fraud", x = "Hour")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-18-3.png" width="672" />
-
--   Are older customers significantly more likely to be victims of credit card fraud? To calculate a customer's age, we use the `lubridate` package and the following code
-    -   When looking at the total number of fraudulent transactions by age, it would appear that older customers are not more likely to be victims
-    -   However, when looking in percentage terms, older customers are more likely to be victims of fraud
-        -   But, not all older customers are victims of fraud. Rather, some older customers are more likely to be victims of fraud more often than those who are younger
-        -   The upwards trend in fraud susceptibility starts around age 50
-
-<!-- -->
-
-```         
-  mutate(
-   age = interval(dob, trans_date_trans_time) / years(1),
-    )
-```
-
-
-```r
-# First let me check the output of this age code, as I'm unfamiliar
-
-card_fraud %>% 
-  mutate(
-   age = interval(dob, trans_date_trans_time) / years(1),
-    ) %>% 
-  select(age) 
-```
-
-```
-## # A tibble: 671,028 × 1
-##      age
-##    <dbl>
-##  1  59.3
-##  2  72.9
-##  3  34.7
-##  4  28.1
-##  5  33.9
-##  6  44.3
-##  7  19.8
-##  8  61.0
-##  9  37.5
-## 10  22.3
-## # ℹ 671,018 more rows
-```
-
-```r
-# Looks like the age generated is super specific. I want to generalise a bit, so I am going to round to the nearest whole number
-
-card_fraud %>% 
-  mutate(
-    
-    # Rounding to 0 decimals, as discussed
-    age = round(interval(dob, trans_date_trans_time) / years(1), 0)
-    ) %>% 
+  # add labels to help our audience  
+  labs(title="Which airline dominates the NYC to SFO route?", 
+       subtitle = "as % of total flights in 2013",
+       x= "Number of flights",
+       y= NULL) +
   
-  # Grouping by age and calculating variables of interest
-  group_by(age) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
- 
-  # Let's look at the number of frauds first
-  ggplot(aes(x=age,y=fraud_trans)) +
-  geom_point() +
-
-  # And keep our aesthetic consistency
-  ggthemes::theme_stata() +
-  labs(title = "Number of fraudulent transactions by account holder age", x = "Age", y = "Fraudulent Transactions")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-19-1.png" width="672" />
-
-```r
-# Let's repeat for percentage of transactions being fraudulent
-
-card_fraud %>% 
-  mutate(
-    age = round(interval(dob, trans_date_trans_time) / years(1), 0)
-    ) %>% 
-  group_by(age) %>% 
-  summarise(total_trans = n(), fraud_trans = sum(is_fraud == 1), pct_fraud = round(fraud_trans/total_trans*100,2)) %>% 
- 
-  # Here, we change our y value
-  ggplot(aes(x=age,y=pct_fraud)) +
-  geom_point() +
+  theme_minimal() + 
   
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Percentage of fraudulent transactions by account holder age", x = "Age", y = "% Fraud")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-19-2.png" width="672" />
-
--   Is fraud related to distance? The distance between a card holder's home and the location of the transaction can be a feature that is related to fraud. To calculate distance, we need the latidue/longitude of card holders's home and the latitude/longitude of the transaction, and we will use the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) to calculate distance. I adapted code to [calculate distance between two points on earth](https://www.geeksforgeeks.org/program-distance-two-points-earth/amp/) which you can find below
-
-
-```r
-# distance between card holder's home and transaction
-# code adapted from https://www.geeksforgeeks.org/program-distance-two-points-earth/amp/
-
-
-fraud <- card_fraud %>%
-  mutate(
-    
-    # convert latitude/longitude to radians
-    lat1_radians = lat / 57.29577951,
-    lat2_radians = merch_lat / 57.29577951,
-    long1_radians = long / 57.29577951,
-    long2_radians = merch_long / 57.29577951,
-    
-    # calculate distance in miles
-    distance_miles = 3963.0 * acos((sin(lat1_radians) * sin(lat2_radians)) + cos(lat1_radians) * cos(lat2_radians) * cos(long2_radians - long1_radians)),
-
-    # calculate distance in km
-    distance_km = 6377.830272 * acos((sin(lat1_radians) * sin(lat2_radians)) + cos(lat1_radians) * cos(lat2_radians) * cos(long2_radians - long1_radians))
-
-  )
-
-
-fraud %>% 
-    
-  # Changing fraud values 0,1 to more readable names
-  mutate(is_fraud = case_when(
-    is_fraud == 1 ~ "Fraud",
-    is_fraud == 0 ~ "Legitimate"
-  )) %>% 
+  # change the theme-- i just googled those , but you can use the ggThemeAssist add-in
+  # https://cran.r-project.org/web/packages/ggThemeAssist/index.html
   
-  # Now plotting a violin plot, faceted by legitimate and fraudulent transactions
-  ggplot(aes(x = is_fraud, y = distance_km, fill = is_fraud)) +
-  geom_violin() +
-  
-  # Faceting with scales = "free_x" to remove redundant x_axis space
-  facet_wrap(~ is_fraud, scales = "free_x") +
-  
-  # Aesthetic modifications
-  ggthemes::theme_stata() +
-  labs(title = "Distance of transaction from card holder's home", subtitle = "Split by legitimate and fraudulent transactions", x = NULL, y = "Distance (km)", fill = NULL) +
-  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-20-1.png" width="672" />
-
-Plot a boxplot or a violin plot that looks at the relationship of distance and `is_fraud`. Does distance seem to be a useful feature in explaining fraud?
-
--   Distance seemingly has almost no effect on fraudulent transactions, as the below violin plot shows the distribution of transaction distances are nearly identical for the respective types of activity
-
-# Exploring sources of electricity production, CO2 emissions, and GDP per capita.
-
-There are many sources of data on how countries generate their electricity and their CO2 emissions. I would like you to create three graphs:
-
-
-```r
-# Download electricity data
-url <- "https://nyc3.digitaloceanspaces.com/owid-public/data/energy/owid-energy-data.csv"
-
-energy <- read_csv(url) %>% 
-  filter(year >= 1990) %>% 
-  drop_na(iso_code) %>% 
-  select(1:3,
-         biofuel = biofuel_electricity,
-         coal = coal_electricity,
-         gas = gas_electricity,
-         hydro = hydro_electricity,
-         nuclear = nuclear_electricity,
-         oil = oil_electricity,
-         other_renewable = other_renewable_exc_biofuel_electricity,
-         solar = solar_electricity,
-         wind = wind_electricity, 
-         electricity_demand,
-         electricity_generation,
-         net_elec_imports,	# Net electricity imports, measured in terawatt-hours
-         energy_per_capita,	# Primary energy consumption per capita, measured in kilowatt-hours	Calculated by Our World in Data based on BP Statistical Review of World Energy and EIA International Energy Data
-         energy_per_gdp,	# Energy consumption per unit of GDP. This is measured in kilowatt-hours per 2011 international-$.
-         per_capita_electricity, #	Electricity generation per capita, measured in kilowatt-hours
-  ) 
-
-# Download data for C02 emissions per capita https://data.worldbank.org/indicator/EN.ATM.CO2E.PC
-co2_percap <- wb_data(country = "countries_only", 
-                      indicator = "EN.ATM.CO2E.PC", 
-                      start_date = 1990, 
-                      end_date = 2022,
-                      return_wide=FALSE) %>% 
-  filter(!is.na(value)) %>% 
-  #drop unwanted variables
-  select(-c(unit, obs_status, footnote, last_updated)) %>% 
-  rename(year = date,
-         co2percap = value)
-
-
-# Download data for GDP per capita  https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.KD
-gdp_percap <- wb_data(country = "countries_only", 
-                      indicator = "NY.GDP.PCAP.PP.KD", 
-                      start_date = 1990, 
-                      end_date = 2022,
-                      return_wide=FALSE) %>% 
-  filter(!is.na(value)) %>% 
-  #drop unwanted variables
-  select(-c(unit, obs_status, footnote, last_updated)) %>% 
-  rename(year = date,
-         GDPpercap = value)
-
-head(energy)
-```
-
-```
-## # A tibble: 6 × 18
-##   country  year iso_code biofuel  coal   gas hydro nuclear   oil other_renewable
-##   <chr>   <dbl> <chr>      <dbl> <dbl> <dbl> <dbl>   <dbl> <dbl>           <dbl>
-## 1 Afghan…  1990 AFG           NA    NA    NA    NA      NA    NA              NA
-## 2 Afghan…  1991 AFG           NA    NA    NA    NA      NA    NA              NA
-## 3 Afghan…  1992 AFG           NA    NA    NA    NA      NA    NA              NA
-## 4 Afghan…  1993 AFG           NA    NA    NA    NA      NA    NA              NA
-## 5 Afghan…  1994 AFG           NA    NA    NA    NA      NA    NA              NA
-## 6 Afghan…  1995 AFG           NA    NA    NA    NA      NA    NA              NA
-## # ℹ 8 more variables: solar <dbl>, wind <dbl>, electricity_demand <dbl>,
-## #   electricity_generation <dbl>, net_elec_imports <dbl>,
-## #   energy_per_capita <dbl>, energy_per_gdp <dbl>, per_capita_electricity <dbl>
-```
-
-```r
-head(co2_percap)
-```
-
-```
-## # A tibble: 6 × 7
-##   indicator_id   indicator                   iso2c iso3c country  year co2percap
-##   <chr>          <chr>                       <chr> <chr> <chr>   <dbl>     <dbl>
-## 1 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2019     0.161
-## 2 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2018     0.165
-## 3 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2017     0.134
-## 4 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2016     0.153
-## 5 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2015     0.176
-## 6 EN.ATM.CO2E.PC CO2 emissions (metric tons… AF    AFG   Afghan…  2014     0.149
-```
-
-```r
-head(gdp_percap)
-```
-
-```
-## # A tibble: 6 × 7
-##   indicator_id      indicator                iso2c iso3c country  year GDPpercap
-##   <chr>             <chr>                    <chr> <chr> <chr>   <dbl>     <dbl>
-## 1 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2021     1516.
-## 2 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2020     1968.
-## 3 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2019     2080.
-## 4 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2018     2061.
-## 5 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2017     2096.
-## 6 NY.GDP.PCAP.PP.KD GDP per capita, PPP (co… AF    AFG   Afghan…  2016     2101.
-```
-
-## 1. A stacked area chart that shows how your own country generated its electricity since 2000.
-
-
-```r
-uk_energy <- energy %>% 
-  
-  # First let's filter for my country, the UK
-  filter(country == "United Kingdom" & year >= 2000) %>% 
-  
-  # Now pivoting the data such that all the energy sources are in one column, as are their respective generated amounts
-  pivot_longer(cols = biofuel:wind, values_to = "energy_generated", names_to = "energy_source") %>% 
-  
-  # Selecting only relevant values for visual check of accuracy
-  select(country, year, energy_source, energy_generated)
-
-glimpse(uk_energy) # Looks good
-```
-
-```
-## Rows: 198
-## Columns: 4
-## $ country          <chr> "United Kingdom", "United Kingdom", "United Kingdom",…
-## $ year             <dbl> 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,…
-## $ energy_source    <chr> "biofuel", "coal", "gas", "hydro", "nuclear", "oil", …
-## $ energy_generated <dbl> 3.94, 119.95, 148.08, 5.09, 85.06, 11.31, 0.00, 0.00,…
-```
-
-```r
-# Now let's plot it
-
-uk_energy %>% 
-  ggplot(aes(x = year,y = energy_generated, fill = energy_source)) +
-  geom_area(colour="grey90", alpha = 0.5, position = "fill") +
-  
-  # Keeping our aesthetics consistent from before
-  ggthemes::theme_stata() +
-  labs(title = "Area plot of UK energy generation since 2000", x = NULL, y = "Energy Generation", fill = "Energy Source")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-22-1.png" width="672" />
-
-## 2. A scatter plot that looks at how CO2 per capita and GDP per capita are related
-
-
-```r
-# First, lets join the relevant tables and check it worked as expected
-
-co2_gdp <- left_join(co2_percap, gdp_percap, by = c("iso3c", "year")) %>% 
-  select(iso3c, year, co2percap, GDPpercap)
-
-head(co2_gdp) # Looks good
-```
-
-```
-## # A tibble: 6 × 4
-##   iso3c  year co2percap GDPpercap
-##   <chr> <dbl>     <dbl>     <dbl>
-## 1 AFG    2019     0.161     2080.
-## 2 AFG    2018     0.165     2061.
-## 3 AFG    2017     0.134     2096.
-## 4 AFG    2016     0.153     2101.
-## 5 AFG    2015     0.176     2109.
-## 6 AFG    2014     0.149     2144.
-```
-
-```r
-# Now lets plot a scatter plot
-co2_gdp %>% 
-  filter(iso3c == "GBR") %>% 
-  ggplot(aes(y = co2percap, x = GDPpercap)) +
-  geom_point() +
-  geom_text(aes(label = year, hjust = 0.5, vjust = 1.5)) +
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Plot of GDP and CO2 per capita", x = "GDP per Capita", y = "Co2 per Capita")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-23-1.png" width="672" />
-
-## 3. A scatter plot that looks at how electricity usage (kWh) per capita/day GDP per capita are related
-
-We will get energy data from the Our World in Data website, and CO2 and GDP per capita emissions from the World Bank, using the `wbstats`package.
-
-
-```r
-# I'm a bit confused by this title, and the plot shown below. I have decided to follow the title as 'electricity usage per capita per day, and gdp per capita', which is slightly different to the plot shown below.
-
-# We need to mutate the energy table such that the iso_code column is called iso3c, the same as in our gdp_percap table
-
-elec_gdp <- energy %>% 
-  mutate(iso3c = iso_code) %>% 
-
-# Now lets join the relevant tables and check it worked as expected
-
-left_join(gdp_percap, energy, by = c("iso3c", "year")) %>%
-  select(iso3c, year, GDPpercap, per_capita_electricity)
-
-# Im going to manipulate the per_capita_electricity table first, into per day form
-
-elec_gdp %>% 
-  
-  # Divide by 365 to get daily usage, rather than yearly
-  mutate(per_cap_day_electricity = per_capita_electricity/365) %>% 
-  filter(iso3c == "GBR") %>% 
-
-  # Now plotting
-  ggplot(aes(x = GDPpercap, y = per_cap_day_electricity)) +
-  geom_point() +
-  geom_text(aes(label = year, hjust = 0.5, vjust = 1.5)) +
-  
-  # Aesthetics
-  ggthemes::theme_stata() +
-  labs(title = "Plot of GDP and daily electricy usage per capita", x = "GDP per Capita", y = "Daily electricity usage per Capita")
-```
-
-<img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-24-1.png" width="672" />
-
-Specific questions:
-
-1.  How would you turn `energy` to long, tidy format?
-
-    -   As shown, I used pivot_longer(cols = biofuel:wind, values_to = "energy_generated", names_to = "energy_source") to convert energy into long, tidy format
-        -   This essentially transforms multiple columns into one, hence 'long' data, and pairs them with their subsequent values in the adjacent column
-
-2.  You may need to join these data frames
-
-    -   Use `left_join` from `dplyr` to [join the tables](http://r4ds.had.co.nz/relational-data.html)
-    -   To complete the merge, you need a unique *key* to match observations between the data frames. Country names may not be consistent among the three dataframes, so please use the 3-digit ISO code for each country
-    -   An aside: There is a great package called [`countrycode`](https://github.com/vincentarelbundock/countrycode) that helps solve the problem of inconsistent country names (Is it UK? United Kingdon? Great Britain?). `countrycode()` takes as an input a country's name in a specific format and outputs it using whatever format you specify.
-
-3.  Write a function that takes as input any country's name and returns all three graphs. You can use the `patchwork` package to arrange the three graphs as shown below
-
+  theme(#
+    # so title is left-aligned
+    plot.title.position = "plot",
     
-    ```r
-    # First making the iso_code column name consistent for joining
+    # text in axes appears larger        
+    axis.text = element_text(size=12),
     
-    energy_iso <- energy %>% 
-      rename(iso3c = iso_code)
-    
-    # Now joining the two per capita tables
-    percap_data <- left_join(co2_percap, gdp_percap, by = c("iso3c", "year")) %>% 
-        select(country.x, iso3c, year, co2percap, GDPpercap) %>% 
-        rename(country = country.x)
-    
-    # Then, I need to add the per capita electricity usage as we did in Part 3, then save for use in the function
-    
-    percap_plot_data <- left_join(percap_data, energy_iso, by = c("iso3c", "year")) %>% 
-      select(country.x, iso3c, year, co2percap, GDPpercap, per_capita_electricity) %>% 
-      rename(country = country.x)
-    
-    
-    # Next, I'm tidying the energy table, using the same code as in Part 1, and saving for using in the function
-    energy_tidy <- energy_iso %>% 
-        pivot_longer(cols = biofuel:wind, values_to = "energy_generated", names_to = "energy_source") %>% 
-      select(country, iso3c, year, energy_source, energy_generated) 
-    
-    
-    
-    # Now we can begin creating our function
-    country_plots <- function(iso_code) {
-    
-      plot_1 <- energy_tidy %>% 
-        filter(iso3c == iso_code) %>% 
-        
-        # Plotting
-        ggplot(aes(x = year,y = energy_generated, fill = energy_source)) +
-        geom_area(colour="grey90", alpha = 0.5, position = "fill") +
-        
-        # Keeping our aesthetics consistent from before
-        theme_light() +
-        labs(title = "Area plot of energy generation since 2000", subtitle = iso_code, x = NULL, y = "Energy Generation", fill = "Energy Source")
-        
-      plot_2 <- percap_plot_data %>% 
-      filter(iso3c == iso_code) %>% 
-      ggplot(aes(y = co2percap, x = GDPpercap)) +
-      geom_point() +
-      geom_text(aes(label = year, hjust = 0.5, vjust = 1.5)) +
-      
-      # Aesthetics
-      theme_light() +
-      labs(title = "Plot of GDP and CO2 per capita", x = "GDP per Capita", y = "Co2 per Capita")
-      
-      plot_3 <- percap_plot_data %>% 
-      
-      # Divide by 365 to get daily usage, rather than yearly
-      mutate(per_cap_day_electricity = per_capita_electricity/365) %>% 
-      filter(iso3c == iso_code) %>% 
-    
-      # Now plotting
-      ggplot(aes(x = GDPpercap, y = per_cap_day_electricity)) +
-      geom_point() +
-      geom_text(aes(label = year, hjust = 0.5, vjust = 1.5)) +
-      
-      # Aesthetics
-      theme_light() +
-      labs(title = "Plot of GDP and daily electricy usage per capita", x = "GDP per Capita", y = "Daily electricity usage per Capita")
-      
-      plot_1 / (plot_2 + plot_3)
-      
-      }
-      
-    country_plots("USA")
-    ```
-    
-    ```
-    ## Warning: Removed 20 rows containing non-finite values (`stat_align()`).
-    ```
-    
-    <img src="/blogs/homework2_web_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+    # title text is bigger
+    plot.title = element_text(size=18)
+      ) +
 
-# Details
+  # add one final layer of NULL, so if you comment out any lines
+  # you never end up with a hanging `+` that awaits another ggplot layer
+  NULL
+```
 
--   Who did you collaborate with: NA
--   Approximately how much time did you spend on this problem set: 6 hrs
--   What, if anything, gave you the most trouble: Getting the right tables for the function without creating a mess of manipulation within the function
-
-**Please seek out help when you need it,** and remember the [15-minute rule](https://mam2022.netlify.app/syllabus/#the-15-minute-rule){target="\_blank"}. You know enough R (and have enough examples of code from class and your readings) to be able to do this. If you get stuck, ask for help from others, post a question on Slack-- and remember that I am here to help too!
-
-> As a true test to yourself, do you understand the code you submitted and are you able to explain it to someone else?
+<img src="/blogs/homework2_web_files/figure-html/ggplot-flights-toSFO-1.png" width="672" />
