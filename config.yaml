@@ -6,9 +6,9 @@ googleAnalytics: ''
 disqusShortname: ''
 params:
   banner:
-    buttonText: CV
+    buttonText: Resume
     subtitle: |-
-      Welcome to my website. Feel free to have a look at my CV, as well as some of my datascience projects!
+      Welcome to my website. Feel free to have a look at my resume, as well as some of my datascience projects!
     title: Edward Henry Davies
   blog: {}
   contact:
@@ -66,8 +66,8 @@ params:
         url: '#'
       - name: Portfolio
         url: blogs
-      - name: CV
-        url: cv
+      - name: Resume
+        url: resume
 #      - name: Generic Blog
 #        url: blogs/ipsum
 #      - name: Elements
