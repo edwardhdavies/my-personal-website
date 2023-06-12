@@ -79,8 +79,8 @@ params:
     enable: yes
     showcase:
       - image: h1_cover.png
-        subtitle: An exploration of NYC Flights, and Hollywood movie datasets
-        title: Basic Data Manipulation
+        subtitle: Investigating the Love Interests within Hollywood movie datasets, and the trends amoungst them
+        title: The Love Interests of Hollywood
         url: blogs/homework1_web
       - image: h2_cover.png
         subtitle: Data Visualisation, with data from US mass shootings, credit card fraud, and gloal energy production
