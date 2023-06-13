@@ -5,7 +5,7 @@ categories:
 date: "2021-09-30"
 description: Additional information regarding volunteering, skills and interests  # the title that will show up once someone gets to this page
 draft: false
-image: h1_cover.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+ # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: additional_information
