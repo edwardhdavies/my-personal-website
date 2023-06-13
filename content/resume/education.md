@@ -1,0 +1,33 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-09-30"
+description: An outline of my education so far  # the title that will show up once someone gets to this page
+draft: false
+image: h1_cover.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: education
+title: Education
+---
+
+
+
+## London Business School (2022-2023)
+
+MSc Management – Product Management, Data Science for Business, Digital Strategy, Innovation and Technology Strategy
+LBS Merit scholarship, GMAT: 720
+
+## University of Cambridge (2019-2022)
+
+BA Natural Sciences - Class 2:1
+
+## Dubai College (2017-2019)
+
+Here I studied my A levels, and achieved 3 A*s and a B in Maths, Biology, Chemistry and Further Maths.
+
+## Reading School (2011-2017)
+
+Here I studied my GCSEs, and achieved 9 A*s and 3 As
+

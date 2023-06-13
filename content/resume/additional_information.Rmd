@@ -1,0 +1,62 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-09-30"
+description: Additional information regarding volunteering, skills and interests  # the title that will show up once someone gets to this page
+draft: false
+image: h1_cover.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: additional_information
+title: Additional Information
+---
+
+```{r}
+#| label: load-libraries
+#| echo: false # This option disables the printing of code (only output is displayed).
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(nycflights13)
+library(skimr)
+library(GGally)
+library(ggfortify)
+library(gganimate)
+```
+
+## Volunteering
+
+ - Classroom assistant roles in Harmony House Charity (Haryana, India) 
+ - Al Noor Training Centre for Persons with Disabilities (Dubai, UAE)
+ - Dementia care assistant at Sunrise Senior Living
+ - Genetic Lab Volunteer Intern
+
+## Competitions
+
+ - Cambridge University Consulting Society Case Competition (2021) Finalist
+ - Hack the Globe Hackathon
+ - Cambridge Global Case Competition
+ - ISMTF (2018/2019) Participant
+
+## Tech Skills 
+
+SQL, R, Python, Tableau, Microsoft Office: Excel & Powerpoint
+
+## Clubs/Interests 
+ - LBS Tech & Media Club
+ - LBS 93% Club Treasurer
+ - LBS Consulting Club
+ - LBS Volleyball Team, 
+ - Pembroke & Girton Rugby Team
+ - Cambridge Consulting Network
+ - Cooking
+
+## Soft Skills 
+
+ - Presentation
+ - Outreach
+ - Teamwork
+ - Organisation
+
