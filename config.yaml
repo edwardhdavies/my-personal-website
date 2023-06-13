@@ -83,8 +83,8 @@ params:
         title: The Love Interests of Hollywood
         url: blogs/homework1_web
       - image: h2_cover.png
-        subtitle: Data Visualisation, with data from US mass shootings, credit card fraud, and gloal energy production
-        title: Data Visualisation and Functions
+        subtitle: Investigating a flights database, and manipulating dataframes to tackle specific goals
+        title: Flights, Flights, Flights!
         url: blogs/homework2_web
 #      - image: pic03.jpg
 #        subtitle: Lorem Etiam Nullam
