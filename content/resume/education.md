@@ -5,7 +5,7 @@ categories:
 date: "2021-09-30"
 description: An outline of my education so far  # the title that will show up once someone gets to this page
 draft: false
-image: h1_cover.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+image: education.png # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
 
 keywords: ""
 slug: education
